@@ -50,12 +50,12 @@ body {
   justify-content: center;
   gap:             8px;
   width:           100%;
-  padding:         16px;
+  padding:         20px;
   border-radius:   var(--radius-full);
   border:          none;
   font-family:     var(--font);
   font-weight:     800;
-  font-size:       1rem;
+  font-size:       1.1rem;
   cursor:          pointer;
   transition:      transform 0.1s, box-shadow 0.1s;
   text-decoration: none;
