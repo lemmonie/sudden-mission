@@ -1,20 +1,17 @@
 const express = require('express')
 const router  = express.Router()
 
-router.post('/', (req, res) => {
-  res.json({ message: '發送任務 API — Phase 3 待實作' })
-})
+const {
+  sendMission,
+  getMissions,
+  acceptMission,
+  completeMission,
+} = require('../controllers/missionController')
+const { protect } = require('../middleware/auth')
 
-router.get('/', (req, res) => {
-  res.json({ message: '取得任務列表 API — Phase 3 待實作' })
-})
-
-router.patch('/:id/accept', (req, res) => {
-  res.json({ message: '接受任務 API — Phase 3 待實作' })
-})
-
-router.patch('/:id/complete', (req, res) => {
-  res.json({ message: '完成任務 API — Phase 3 待實作' })
-})
+router.post('/',               protect, sendMission)
+router.get('/',                protect, getMissions)
+router.patch('/:id/accept',    protect, acceptMission)
+router.patch('/:id/complete',  protect, completeMission)
 
 module.exports = router
