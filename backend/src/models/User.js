@@ -40,8 +40,7 @@ const userSchema = new mongoose.Schema(
 // 儲存前自動加密密碼
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next()
-  this.password = await bcrypt.hash(this.password, 12)
-  next()
+ this.password = await bcrypt.hash(this.password, 12)
 })
 
 // 比對密碼的方法
