@@ -82,7 +82,7 @@ function LoginPage() {
                     />
                 </div>
 
-                <div style={{ marginTop: '8px' }}>
+                <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <button
                         className="btn btn-primary"
                         type="submit"
@@ -90,27 +90,60 @@ function LoginPage() {
                     >
                         {loading ? '登入中...' : '登入'}
                     </button>
+
+                    {/* 分隔線 */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        color: 'var(--text-muted)',
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                    }}>
+                        <div style={{ flex: 1, height: '2px', background: 'var(--border)' }} />
+                        或者
+                        <div style={{ flex: 1, height: '2px', background: 'var(--border)' }} />
+                    </div>
+
+                    {/* Discord 登入按鈕 */}
+
+                     <a href="https://sudden-mission-backend.onrender.com/api/auth/discord"
+                        className="btn"
+                        style={{
+                            background: '#5865F2',
+                            color: '#fff',
+                            boxShadow: '0 4px 0 #4752C4',
+                            border: '2px solid #4752C4',
+                            textDecoration: 'none',
+                        }}
+                    >
+                    <span style={{ fontSize: '1.2rem' }}>💬</span>
+                    用 Discord 登入
+                </a>
                 </div>
 
-            </form>
 
-            {/* 切換到註冊 */}
-            <p style={{
-                textAlign: 'center',
-                marginTop: '32px',
+
+            </form >
+
+        {/* 切換到註冊 */ }
+        < p style = {{
+        textAlign: 'center',
+            marginTop: '32px',
                 color: 'var(--text-muted)',
-                fontWeight: 600
-            }}>
-                還沒有帳號？{' '}
-                <Link
-                    to="/register"
-                    style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 800 }}
-                >
-                    立即註冊
-                </Link>
-            </p>
+                    fontWeight: 600
+    }
+}>
+    還沒有帳號？{ ' ' }
+<Link
+    to="/register"
+    style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 800 }}
+>
+    立即註冊
+</Link>
+            </p >
 
-        </div>
+        </div >
     )
 }
 

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import DiscordCallbackPage from './pages/DiscordCallbackPage'
 
 import LoginPage       from './pages/LoginPage'
 import RegisterPage    from './pages/RegisterPage'
@@ -27,6 +28,7 @@ function AppRoutes() {
       <Route path="/send" element={<PrivateRoute><SendMissionPage /></PrivateRoute>} />
       <Route path="/inbox" element={<PrivateRoute><InboxPage /></PrivateRoute>} />
       <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+      <Route path="/discord-callback" element={<DiscordCallbackPage />} />
     </Routes>
   )
 }

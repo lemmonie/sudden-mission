@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('./discord') // 啟動 Discord Bot
 
 const express    = require('express')
 const http       = require('http')
@@ -9,6 +10,8 @@ const cors       = require('cors')
 const authRoutes    = require('./routes/auth')
 const pairRoutes    = require('./routes/pair')
 const missionRoutes = require('./routes/mission')
+const discordAuthRoutes = require('./routes/discordAuth')
+app.use('/api/auth', discordAuthRoutes)
 
 const app    = express()
 const server = http.createServer(app)
