@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://sudden-mission-backend.onrender.com/api',
 })
 
 // 每次發請求前，自動把 token 加進 Header

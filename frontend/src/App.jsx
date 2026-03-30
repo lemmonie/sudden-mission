@@ -5,6 +5,9 @@ import LoginPage       from './pages/LoginPage'
 import RegisterPage    from './pages/RegisterPage'
 import HomePage        from './pages/HomePage'
 import SendMissionPage from './pages/SendMissionPage'
+import InboxPage       from './pages/InboxPage'
+import ProfilePage     from './pages/ProfilePage'
+
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -22,6 +25,8 @@ function AppRoutes() {
       <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" />} />
       <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
       <Route path="/send" element={<PrivateRoute><SendMissionPage /></PrivateRoute>} />
+      <Route path="/inbox" element={<PrivateRoute><InboxPage /></PrivateRoute>} />
+      <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
     </Routes>
   )
 }
