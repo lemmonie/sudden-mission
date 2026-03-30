@@ -11,7 +11,6 @@ const authRoutes    = require('./routes/auth')
 const pairRoutes    = require('./routes/pair')
 const missionRoutes = require('./routes/mission')
 const discordAuthRoutes = require('./routes/discordAuth')
-app.use('/api/auth', discordAuthRoutes)
 
 const app    = express()
 const server = http.createServer(app)
@@ -41,6 +40,8 @@ app.use(express.json())
 app.use('/api/auth',    authRoutes)
 app.use('/api/pair',    pairRoutes)
 app.use('/api/mission', missionRoutes)
+app.use('/api/auth', discordAuthRoutes)
+
 
 app.get('/', (req, res) => {
   res.json({ message: '🚀 Sudden Mission API 運作中！' })
