@@ -107,40 +107,44 @@ function LoginPage() {
 
                     {/* Discord 登入按鈕 */}
 
-                     <a href="https://sudden-mission-backend.onrender.com/api/auth/discord"
+                    <a href="https://sudden-mission-backend.onrender.com/api/auth/google"
                         className="btn"
                         style={{
-                            background: '#5865F2',
-                            color: '#fff',
-                            boxShadow: '0 4px 0 #4752C4',
-                            border: '2px solid #4752C4',
+                            background: '#fff',
+                            color: '#444',
+                            boxShadow: '0 4px 0 #ddd',
+                            border: '2px solid #ddd',
                             textDecoration: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
                         }}
                     >
-                    <span style={{ fontSize: '1.2rem' }}>💬</span>
-                    用 Discord 登入
-                </a>
+                        <span style={{ fontSize: '1.2rem' }}>🔵</span>
+                        用 Google 登入
+                    </a>
                 </div>
 
 
 
             </form >
 
-        {/* 切換到註冊 */ }
-        < p style = {{
-        textAlign: 'center',
-            marginTop: '32px',
+            {/* 切換到註冊 */}
+            < p style={{
+                textAlign: 'center',
+                marginTop: '32px',
                 color: 'var(--text-muted)',
-                    fontWeight: 600
-    }
-}>
-    還沒有帳號？{ ' ' }
-<Link
-    to="/register"
-    style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 800 }}
->
-    立即註冊
-</Link>
+                fontWeight: 600
+            }
+            }>
+                還沒有帳號？{' '}
+                <Link
+                    to="/register"
+                    style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 800 }}
+                >
+                    立即註冊
+                </Link>
             </p >
 
         </div >

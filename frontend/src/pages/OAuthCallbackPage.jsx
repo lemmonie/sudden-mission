@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api/axios'
 
-function DiscordCallbackPage() {
+function OAuthCallbackPage() {
   const [searchParams] = useSearchParams()
   const navigate       = useNavigate()
   const { setUser }    = useAuth()
@@ -13,14 +13,12 @@ function DiscordCallbackPage() {
     const error = searchParams.get('error')
 
     if (error) {
-      navigate('/login?error=discord_failed')
+      navigate('/login?error=oauth_failed')
       return
     }
 
     if (token) {
-      // 存 token
       localStorage.setItem('token', token)
-      // 拿用戶資料
       api.get('/auth/me').then(res => {
         setUser(res.data.user)
         navigate('/')
@@ -39,10 +37,10 @@ function DiscordCallbackPage() {
     }}>
       <div style={{ fontSize: '48px' }}>🐱</div>
       <p style={{ fontWeight: 700, color: 'var(--text-muted)' }}>
-        Discord 登入中...
+        登入中...
       </p>
     </div>
   )
 }
 
-export default DiscordCallbackPage
+export default OAuthCallbackPage

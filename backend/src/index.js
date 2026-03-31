@@ -11,6 +11,7 @@ const authRoutes    = require('./routes/auth')
 const pairRoutes    = require('./routes/pair')
 const missionRoutes = require('./routes/mission')
 const discordAuthRoutes = require('./routes/discordAuth')
+const googleAuthRoutes = require('./routes/googleAuth')
 
 const app    = express()
 const server = http.createServer(app)
@@ -37,6 +38,7 @@ io.on('connection', (socket) => {
 app.use(cors())
 app.use(express.json())
 
+app.use('/api/auth', googleAuthRoutes)
 app.use('/api/discord-auth', discordAuthRoutes)
 app.use('/api/auth',    authRoutes)
 app.use('/api/pair',    pairRoutes)

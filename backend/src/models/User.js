@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    googleId: {
+      type: String,
+      default: null,
+    },
 
     // 積分系統
     totalPoints: { type: Number, default: 0 },
