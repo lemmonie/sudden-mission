@@ -37,10 +37,10 @@ io.on('connection', (socket) => {
 app.use(cors())
 app.use(express.json())
 
+app.use('/api/discord-auth', discordAuthRoutes)
 app.use('/api/auth',    authRoutes)
 app.use('/api/pair',    pairRoutes)
 app.use('/api/mission', missionRoutes)
-app.use('/api/auth', discordAuthRoutes)
 
 
 app.get('/', (req, res) => {
