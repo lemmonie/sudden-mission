@@ -18,7 +18,7 @@ function HomePage() {
             const [pairRes, missionRes, confirmRes] = await Promise.all([
                 api.get('/pair/info'),
                 api.get('/mission?role=sent'),
-                api.get('/mission?role=sent&status=completed'),
+                api.get('/mission?role=sent&status=accepted'),
             ])
             setPair(pairRes.data.pair)
             setMissions(missionRes.data.missions.slice(0, 3))

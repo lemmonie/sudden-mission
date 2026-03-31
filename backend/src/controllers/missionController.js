@@ -133,7 +133,7 @@ const confirmMission = async (req, res) => {
     if (!mission.senderId.equals(req.user._id))
       return res.status(403).json({ message: '只有發送方才能確認完成' })
 
-    if (mission.status !== 'completed')
+    if (mission.status !== 'accepted')
       return res.status(400).json({ message: '任務尚未完成' })
 
     mission.status      = 'confirmed'

@@ -195,13 +195,9 @@ function InboxPage() {
             )}
 
             {mission.status === 'accepted' && (
-              <button
-                className="btn btn-primary"
-                onClick={() => handleComplete(mission._id)}
-                style={{ padding: '12px', fontSize: '0.95rem' }}
-              >
-                🙋 我做完了！
-              </button>
+              <div style={{ color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.9rem', marginTop: '8px' }}>
+                🔄 任務進行中，等待對方確認...
+              </div>
             )}
 
             {mission.status === 'completed' && (
