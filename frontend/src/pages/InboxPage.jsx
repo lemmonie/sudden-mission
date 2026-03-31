@@ -4,15 +4,15 @@ import BottomNav from '../components/BottomNav'
 
 function InboxPage() {
   const [missions, setMissions] = useState([])
-  const [loading, setLoading]   = useState(true)
-  const [tab, setTab]           = useState('pending') // pending | done
+  const [loading, setLoading] = useState(true)
+  const [tab, setTab] = useState('pending') // pending | done
 
   const typeEmoji = {
-    physical:  '🤗',
-    errand:    '🛒',
-    company:   '💬',
-    chore:     '🍳',
-    fun:       '🎮',
+    physical: '🤗',
+    errand: '🛒',
+    company: '💬',
+    chore: '🍳',
+    fun: '🎮',
     emotional: '💌',
   }
 
@@ -45,14 +45,7 @@ function InboxPage() {
   // 完成任務
   const handleComplete = async (id) => {
     try {
-      const res = await api.patch(`/mission/${id}/complete`)
-      const { pointsEarned, newStreak, newTitlesUnlocked } = res.data
-
-      let msg = `🎉 完成！獲得 ${pointsEarned} 分！`
-      if (newStreak > 1) msg += `\n🔥 Streak ${newStreak} 天！`
-      if (newTitlesUnlocked.length > 0) msg += `\n🏆 解鎖稱號：${newTitlesUnlocked.join(', ')}！`
-
-      alert(msg)
+      await api.patch(`/mission/${id}/complete`)
       fetchMissions()
     } catch (err) {
       alert(err.response?.data?.message || '操作失敗')
@@ -71,7 +64,7 @@ function InboxPage() {
 
       {/* 頂部 Header */}
       <div style={{
-        padding:      '16px 0',
+        padding: '16px 0',
         borderBottom: '2px solid var(--border)',
         marginBottom: '16px',
       }}>
@@ -82,32 +75,32 @@ function InboxPage() {
 
       {/* Tab 切換 */}
       <div style={{
-        display:       'flex',
-        background:    'var(--border)',
-        borderRadius:  'var(--radius-full)',
-        padding:       '4px',
-        marginBottom:  '20px',
+        display: 'flex',
+        background: 'var(--border)',
+        borderRadius: 'var(--radius-full)',
+        padding: '4px',
+        marginBottom: '20px',
       }}>
         {[
           { key: 'pending', label: '待處理' },
-          { key: 'done',    label: '已完成' },
+          { key: 'done', label: '已完成' },
         ].map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
             style={{
-              flex:          1,
-              padding:       '10px',
-              borderRadius:  'var(--radius-full)',
-              border:        'none',
-              fontFamily:    'var(--font)',
-              fontWeight:    700,
-              fontSize:      '0.9rem',
-              cursor:        'pointer',
-              background:    tab === t.key ? 'var(--surface)' : 'transparent',
-              color:         tab === t.key ? 'var(--primary)' : 'var(--text-muted)',
-              boxShadow:     tab === t.key ? 'var(--shadow)' : 'none',
-              transition:    'all 0.2s',
+              flex: 1,
+              padding: '10px',
+              borderRadius: 'var(--radius-full)',
+              border: 'none',
+              fontFamily: 'var(--font)',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              cursor: 'pointer',
+              background: tab === t.key ? 'var(--surface)' : 'transparent',
+              color: tab === t.key ? 'var(--primary)' : 'var(--text-muted)',
+              boxShadow: tab === t.key ? 'var(--shadow)' : 'none',
+              transition: 'all 0.2s',
             }}
           >
             {t.label}
@@ -120,9 +113,9 @@ function InboxPage() {
         <div style={{ textAlign: 'center', padding: '40px', fontSize: '2rem' }}>🐱</div>
       ) : filtered.length === 0 ? (
         <div style={{
-          textAlign:  'center',
-          padding:    '48px 0',
-          color:      'var(--text-muted)',
+          textAlign: 'center',
+          padding: '48px 0',
+          color: 'var(--text-muted)',
           fontWeight: 600,
         }}>
           <div style={{ fontSize: '48px', marginBottom: '12px' }}>
@@ -133,18 +126,18 @@ function InboxPage() {
       ) : (
         filtered.map(mission => (
           <div key={mission._id} style={{
-            background:   'var(--surface)',
+            background: 'var(--surface)',
             borderRadius: 'var(--radius-lg)',
-            padding:      '16px',
+            padding: '16px',
             marginBottom: '12px',
-            border:       '2px solid var(--border)',
-            boxShadow:    'var(--shadow)',
+            border: '2px solid var(--border)',
+            boxShadow: 'var(--shadow)',
           }}>
             {/* 任務資訊 */}
             <div style={{
-              display:      'flex',
-              alignItems:   'center',
-              gap:          '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
               marginBottom: mission.status !== 'done' ? '14px' : '0',
             }}>
               <span style={{ fontSize: '36px' }}>
@@ -156,32 +149,32 @@ function InboxPage() {
                 </div>
                 {mission.note && (
                   <div style={{
-                    fontSize:   '0.85rem',
-                    color:      'var(--text-muted)',
-                    marginTop:  '2px',
+                    fontSize: '0.85rem',
+                    color: 'var(--text-muted)',
+                    marginTop: '2px',
                   }}>
                     {mission.note}
                   </div>
                 )}
                 <div style={{
-                  display:    'flex',
-                  gap:        '8px',
-                  marginTop:  '4px',
+                  display: 'flex',
+                  gap: '8px',
+                  marginTop: '4px',
                   alignItems: 'center',
                 }}>
                   <span style={{
-                    fontSize:      '0.8rem',
-                    fontWeight:    700,
-                    color:         'var(--primary)',
-                    background:    'var(--primary-light)',
-                    padding:       '2px 8px',
-                    borderRadius:  'var(--radius-full)',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: 'var(--primary)',
+                    background: 'var(--primary-light)',
+                    padding: '2px 8px',
+                    borderRadius: 'var(--radius-full)',
                   }}>
                     ⭐ {mission.points} 分
                   </span>
                   <span style={{
-                    fontSize:  '0.8rem',
-                    color:     'var(--text-muted)',
+                    fontSize: '0.8rem',
+                    color: 'var(--text-muted)',
                     fontWeight: 600,
                   }}>
                     來自 {mission.senderId?.username}
@@ -207,18 +200,19 @@ function InboxPage() {
                 onClick={() => handleComplete(mission._id)}
                 style={{ padding: '12px', fontSize: '0.95rem' }}
               >
-                ✅ 按下完成，獲得 {mission.points} 分！
+                🙋 我做完了！
               </button>
             )}
 
-            {mission.status === 'done' && (
-              <div style={{
-                color:      '#58CC02',
-                fontWeight: 700,
-                fontSize:   '0.9rem',
-                marginTop:  '8px',
-              }}>
-                ✅ 已完成
+            {mission.status === 'completed' && (
+              <div style={{ color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.9rem', marginTop: '8px' }}>
+                ⏳ 等待對方確認中...
+              </div>
+            )}
+
+            {mission.status === 'confirmed' && (
+              <div style={{ color: '#58CC02', fontWeight: 700, fontSize: '0.9rem', marginTop: '8px' }}>
+                ✅ 已完成並獲得積分！
               </div>
             )}
           </div>

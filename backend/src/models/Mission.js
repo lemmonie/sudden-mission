@@ -11,9 +11,11 @@ const missionSchema = new mongoose.Schema(
     note:    { type: String, default: '', maxlength: [300, '最多 300 個字'] },
     points:  { type: Number, required: true, min: 1, max: 10 },
 
-    status:      { type: String, enum: ['pending','accepted','done','declined'], default: 'pending' },
+    status:      { type: String, enum: ['pending','accepted','completed','confirmed','declined'], default: 'pending' },
     acceptedAt:  { type: Date, default: null },
     completedAt: { type: Date, default: null },
+    confirmedAt: { type: Date, default: null },
+    rating:      { type: Number, default: null, min: 1, max: 5 },
   },
   { timestamps: true }
 )
