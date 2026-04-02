@@ -15,7 +15,7 @@ function HomePage() {
 
     const fetchData = async () => {
         try {
-            const [pairRes, missionRes, confirmRes] = await Promise.all([
+            const [pairRes, missionRes, pendingRes] = await Promise.all([
                 api.get('/pair/info'),
                 api.get('/mission?role=sent&status=completed'), // 待確認
                 api.get('/mission?role=received'),              // 收到的
