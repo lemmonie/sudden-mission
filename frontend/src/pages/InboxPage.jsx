@@ -3,7 +3,8 @@ import api from '../api/axios'
 import BottomNav from '../components/BottomNav'
 
 function InboxPage() {
-  const [missions, setMissions] = useState([])
+  const [sentMissions, setSentMissions] = useState([])
+  const [completedMissions, setCompletedMissions] = useState([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState('pending') // pending | done
 
@@ -19,8 +20,16 @@ function InboxPage() {
   // 取得收到的任務
   const fetchMissions = async () => {
     try {
-      const res = await api.get('/mission?role=received')
-      setMissions(res.data.missions)
+      const [sentRes, completedRes] = await Promise.all([
+        api.get('/mission?role=sent'),
+        api.get('/mission?role=received'),
+      ])
+      setSentMissions(sentRes.data.missions)
+      setCompletedMissions(
+        completedRes.data.missions
+          .filter(m => m.status === 'confirmed')
+          .slice(0, 10)
+      )
     } catch (err) {
       console.error(err)
     } finally {
@@ -53,11 +62,7 @@ function InboxPage() {
   }
 
   // 根據 tab 篩選
-  const filtered = missions.filter(m =>
-    tab === 'pending'
-      ? m.status === 'pending' || m.status === 'accepted' || m.status === 'completed'
-      : m.status === 'confirmed'
-  )
+  const filtered = tab === 'sent' ? sentMissions : completedMissions
 
   return (
     <div className="app-container" style={{ paddingBottom: '100px' }}>
@@ -82,7 +87,7 @@ function InboxPage() {
         marginBottom: '20px',
       }}>
         {[
-          { key: 'pending', label: '待處理' },
+          { key: 'sent', label: '任務記錄' },
           { key: 'done', label: '已完成' },
         ].map(t => (
           <button
@@ -177,7 +182,7 @@ function InboxPage() {
                     color: 'var(--text-muted)',
                     fontWeight: 600,
                   }}>
-                    來自 {mission.senderId?.username}
+                   {tab === 'sent' ? `給 ${mission.receiverId?.username}` : `來自 ${mission.senderId?.username}`}
                   </span>
 
                   <span style={{
@@ -185,7 +190,7 @@ function InboxPage() {
                     color: 'var(--text-muted)',
                     fontWeight: 500,
                   }}>
-                    {tab === 'pending'
+                    {tab === 'sent'
                       ? `📅 ${new Date(mission.createdAt).toLocaleDateString('zh-TW')}`
                       : `✅ ${new Date(mission.confirmedAt).toLocaleDateString('zh-TW')}`
                     }

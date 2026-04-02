@@ -17,12 +17,16 @@ function HomePage() {
         try {
             const [pairRes, missionRes, confirmRes] = await Promise.all([
                 api.get('/pair/info'),
-                api.get('/mission?role=sent'),
-                api.get('/mission?role=sent&status=accepted'),
+                api.get('/mission?role=sent&status=completed'), // 待確認
+                api.get('/mission?role=received'),              // 收到的
             ])
             setPair(pairRes.data.pair)
-            setMissions(missionRes.data.missions.slice(0, 3))
-            setPendingConfirm(confirmRes.data.missions)
+            setPendingConfirm(missionRes.data.missions)
+            setMissions(
+                pendingRes.data.missions.filter(m =>
+                    m.status === 'pending' || m.status === 'accepted' || m.status === 'completed'
+                )
+            )
         } catch (err) {
             // 還沒配對的話 pair 就是 null
         } finally {
@@ -192,7 +196,7 @@ function HomePage() {
             {/* 最近任務 */}
             <div>
                 <h3 style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '12px', color: 'var(--text)' }}>
-                    最近任務
+                    📭 待處理任務
                 </h3>
                 {missions.length === 0 ? (
                     <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '24px', fontWeight: 600, fontSize: '0.9rem' }}>
@@ -210,7 +214,9 @@ function HomePage() {
                                 <span style={{ fontSize: '24px' }}>{typeEmoji[mission.type]}</span>
                                 <div>
                                     <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{mission.subtype}</div>
-                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{mission.points} 分</div>
+                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                        {mission.points} 分 · 📅 {new Date(mission.createdAt).toLocaleDateString('zh-TW')}
+                                    </div>
                                 </div>
                             </div>
                             <span style={{
