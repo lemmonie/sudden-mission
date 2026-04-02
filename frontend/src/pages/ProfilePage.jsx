@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import BottomNav from '../components/BottomNav'
 import { useState } from 'react'
 import api from '../api/axios'
+import { disconnect } from 'node:cluster'
 
 function ProfilePage() {
   const { user, logout } = useAuth()
@@ -11,6 +12,7 @@ function ProfilePage() {
   const [pairCode, setPairCode] = useState('')
   const [pairMsg, setPairMsg] = useState('')
   const [pairing, setPairing] = useState(false)
+  const [disconnecting, setDisconnecting] = useState(false)
 
   const handlePair = async () => {
     if (!pairCode.trim()) return
@@ -24,6 +26,19 @@ function ProfilePage() {
       setPairMsg(err.response?.data?.message || '配對失敗，請檢查配對碼')
     } finally {
       setPairing(false)
+    }
+  }
+
+  const handleDisconnect = async () => {
+    if (!window.confirm('確定要取消配對嗎？')) return
+    setDisconnecting(true)
+    try {
+      await api.delete('/pair/disconnect')
+      window.location.reload()
+    } catch (err) {
+      alert(err.response?.data?.message || '取消配對失敗')
+    } finally {
+      setDisconnecting(false)
     }
   }
 
@@ -230,9 +245,19 @@ function ProfilePage() {
         </div>
         <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
           {user.pairId ? (
-            <p style={{ fontSize: '0.8rem', color: '#58CC02', fontWeight: 700 }}>
-              已配對 🎉
-            </p>
+            <div>
+              <p style={{ fontSize: '0.8rem', color: '#58CC02', fontWeight: 700 }}>
+                已配對 🎉
+              </p>
+              <button
+                className="btn btn-outline"
+                onClick={handleDisconnect}
+                disabled={disconnecting}
+                style={{ fontSize: '0.85rem', color: '#ff4b4b', borderColor: '#ff4b4b' }}
+              >
+                {disconnecting ? '取消中...' : '取消配對'}
+              </button>
+            </div>
           ) : (
             <div style={{ marginTop: '12px' }}>
               <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '12px' }}>
@@ -261,19 +286,20 @@ function ProfilePage() {
             </div>
           )}
         </p>
-      </div>
+      </div >
 
       {/* 登出按鈕 */}
-      <button
+      < button
         className="btn btn-outline"
         onClick={handleLogout}
-        style={{ marginTop: '8px' }}
+        style={{ marginTop: '8px' }
+        }
       >
         登出
-      </button>
+      </button >
 
       <BottomNav />
-    </div>
+    </div >
   )
 }
 

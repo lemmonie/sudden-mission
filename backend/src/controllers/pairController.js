@@ -71,4 +71,34 @@ const getPairInfo = async (req, res) => {
   }
 }
 
-module.exports = { connectPair, getPairInfo }
+// ── 取消配對
+const disconnectPair = async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user._id)
+
+    // 檢查是否有配對
+    if (!currentUser.pairId) {
+      return res.status(400).json({ message: '你目前沒有配對對象' })
+    }
+
+    // 找到配對 document
+    const pair = await Pair.findById(currentUser.pairId)
+    if (!pair) {
+      return res.status(404).json({ message: '找不到配對資料' })
+    }
+
+    // 把雙方的 pairId 都清空
+    await User.findByIdAndUpdate(pair.user1, { pairId: null })
+    await User.findByIdAndUpdate(pair.user2, { pairId: null })
+
+    // 刪除配對 document
+    await Pair.findByIdAndDelete(pair._id)
+
+    res.json({ message: '已成功取消配對' })
+  } catch (err) {
+    res.status(500).json({ message: '伺服器錯誤', error: err.message })
+  }
+}
+
+module.exports = { connectPair, getPairInfo, disconnectPair}
+
