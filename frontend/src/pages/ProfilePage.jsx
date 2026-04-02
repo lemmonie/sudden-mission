@@ -17,7 +17,7 @@ function ProfilePage() {
     setPairing(true)
     setPairMsg('')
     try {
-      await api.post('/pair', { pairCode: pairCode.trim().toUpperCase() })
+      await api.post('/pair/connect', { pairCode: pairCode.trim().toUpperCase() })
       setPairMsg('配對成功！🎉')
       setTimeout(() => window.location.reload(), 1000)
     } catch (err) {
