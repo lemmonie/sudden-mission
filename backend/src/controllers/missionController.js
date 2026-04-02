@@ -218,7 +218,7 @@ const confirmMission = async (req, res) => {
 
     const executorUser = await User.findById(mission.receiverId)
     if (executorUser.email) {
-      await sendEmail({
+      sendEmail({
         to: executorUser.email,
         subject: '🎉 任務完成！積分已入帳',
         html: `
@@ -233,7 +233,7 @@ const confirmMission = async (req, res) => {
             </a>
           </div>
     `,
-      })
+      }).catch(err => console.error('Email 發送失敗:', err))
     }
   } catch (err) {
     res.status(500).json({ message: '伺服器錯誤', error: err.message })
