@@ -47,6 +47,8 @@ const sendMission = async (req, res) => {
     res.status(201).json({ mission })
 
     const receiver = await User.findById(receiverId)
+    console.log('📧 準備寄 email 給:', receiver?.email) 
+    
     if (receiver.email) {
       sendEmail({
         to: receiver.email,
