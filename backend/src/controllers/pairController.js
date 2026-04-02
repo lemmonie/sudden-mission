@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const Pair = require('../models/Pair')
+const Mission = require('../models/Mission')
 
 // ── 輸入配對碼，建立配對關係
 const connectPair = async (req, res) => {
@@ -86,6 +87,12 @@ const disconnectPair = async (req, res) => {
     if (!pair) {
       return res.status(404).json({ message: '找不到配對資料' })
     }
+
+     // 刪除雙方之間未完成的任務
+    await Mission.deleteMany({
+      pairId: pair._id,
+      status: { $in: ['pending', 'accepted'] },
+    })
 
     // 把雙方的 pairId 都清空
     await User.findByIdAndUpdate(pair.user1, { pairId: null })
