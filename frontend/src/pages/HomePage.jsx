@@ -68,6 +68,24 @@ function HomePage() {
         }
     }
 
+    const handleAcceptInbox = async (id) => {
+        try {
+            await api.patch(`/mission/${id}/accept`)
+            fetchData()
+        } catch (err) {
+            alert(err.response?.data?.message || '操作失敗')
+        }
+    }
+
+    const handleCompleteInbox = async (id) => {
+        try {
+            await api.patch(`/mission/${id}/complete`)
+            fetchData()
+        } catch (err) {
+            alert(err.response?.data?.message || '操作失敗')
+        }
+    }
+
     if (loading) {
         return (
             <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -208,23 +226,34 @@ function HomePage() {
                             background: 'var(--surface)', borderRadius: 'var(--radius-md)',
                             padding: '14px 16px', marginBottom: '10px',
                             border: '2px solid var(--border)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                         }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <span style={{ fontSize: '24px' }}>{typeEmoji[mission.type]}</span>
-                                <div>
-                                    <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{mission.subtype}</div>
-                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                        {mission.points} 分 · 📅 {new Date(mission.createdAt).toLocaleDateString('zh-TW')}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: mission.status === 'pending' || mission.status === 'accepted' ? '12px' : '0' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <span style={{ fontSize: '24px' }}>{typeEmoji[mission.type]}</span>
+                                    <div>
+                                        <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{mission.subtype}</div>
+                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                            {mission.points} 分 · 📅 {new Date(mission.createdAt).toLocaleDateString('zh-TW')}
+                                        </div>
                                     </div>
                                 </div>
+                                <span style={{
+                                    fontSize: '0.8rem', fontWeight: 700,
+                                    color: mission.status === 'confirmed' ? '#58CC02' : 'var(--text-muted)',
+                                }}>
+                                    {statusText[mission.status]}
+                                </span>
                             </div>
-                            <span style={{
-                                fontSize: '0.8rem', fontWeight: 700,
-                                color: mission.status === 'confirmed' ? '#58CC02' : 'var(--text-muted)',
-                            }}>
-                                {statusText[mission.status]}
-                            </span>
+                            {mission.status === 'pending' && (
+                                <button className="btn btn-primary" onClick={() => handleAcceptInbox(mission._id)} style={{ padding: '10px', fontSize: '0.9rem' }}>
+                                    接受任務
+                                </button>
+                            )}
+                            {mission.status === 'accepted' && (
+                                <button className="btn btn-primary" onClick={() => handleCompleteInbox(mission._id)} style={{ padding: '10px', fontSize: '0.9rem' }}>
+                                    標記完成
+                                </button>
+                            )}
                         </div>
                     ))
                 )}

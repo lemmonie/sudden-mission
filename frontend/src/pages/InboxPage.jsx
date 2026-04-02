@@ -6,7 +6,7 @@ function InboxPage() {
   const [sentMissions, setSentMissions] = useState([])
   const [completedMissions, setCompletedMissions] = useState([])
   const [loading, setLoading] = useState(true)
-  const [tab, setTab] = useState('pending') // pending | done
+  const [tab, setTab] = useState('sent') // pending | done
 
   const typeEmoji = {
     physical: '🤗',
@@ -201,7 +201,7 @@ function InboxPage() {
             </div>
 
             {/* 操作按鈕 */}
-            {mission.status === 'pending' && (
+            {tab !== 'sent' && mission.status === 'pending' && (
               <button
                 className="btn btn-primary"
                 onClick={() => handleAccept(mission._id)}
