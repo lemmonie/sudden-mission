@@ -164,15 +164,7 @@ const confirmMission = async (req, res) => {
     mission.rating = rating
     await mission.save()
 
-    res.json({
-      mission,
-      pointsEarned: earnedPoints,
-      newStreak,
-      newTotal,
-      newTitlesUnlocked: newTitles.filter(t => !executor.titles.includes(t)),
-    })
-
-    // 積分入帳給 B
+    // 先計算積分
     const executor = await User.findById(mission.receiverId)
     const now = new Date()
     const last = executor.lastCompletedAt
@@ -215,11 +207,19 @@ const confirmMission = async (req, res) => {
       })
     }
 
+    // 先回傳給前端
+    res.json({
+      mission,
+      pointsEarned: earnedPoints,
+      newStreak,
+      newTotal,
+      newTitlesUnlocked: newTitles.filter(t => !executor.titles.includes(t)),
+    })
 
-    const executorUser = await User.findById(mission.receiverId)
-    if (executorUser.email) {
+    // 背景寄 email
+    if (executor.email) {
       sendEmail({
-        to: executorUser.email,
+        to: executor.email,
         subject: '🎉 任務完成！積分已入帳',
         html: `
           <div style="font-family: sans-serif; max-width: 400px; margin: 0 auto;">
@@ -232,7 +232,7 @@ const confirmMission = async (req, res) => {
               打開 Sudden Mission
             </a>
           </div>
-    `,
+        `,
       }).catch(err => console.error('Email 發送失敗:', err))
     }
   } catch (err) {
