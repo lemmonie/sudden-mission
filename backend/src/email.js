@@ -19,7 +19,7 @@ const sendEmail = async ({ to, subject, html }) => {
     })
     console.log(`✅ Email 已發送至 ${to}`)
   } catch (err) {
-    console.error('❌ Email 發送失敗:', err.message)
+    console.error('❌ Email 發送失敗:', err)
   }
 }
 
