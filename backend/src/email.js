@@ -1,18 +1,11 @@
-const nodemailer = require('nodemailer')
+const { Resend } = require('resend')
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
-  },
-  family : 4,
-})
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
-    await transporter.sendMail({
-      from: `Sudden Mission 🐱 <${process.env.GMAIL_USER}>`,
+    await resend.emails.send({
+      from: 'Sudden Mission 🐱 <onboarding@resend.dev>',
       to,
       subject,
       html,
