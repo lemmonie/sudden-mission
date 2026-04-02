@@ -42,10 +42,13 @@ const sendMission = async (req, res) => {
 
     const io = req.app.get('io')
     if (io) io.to(receiverId.toString()).emit('newMission', mission)
+    
+    // 先回傳給前端（不用等 email）
+    res.status(201).json({ mission })
 
     const receiver = await User.findById(receiverId)
     if (receiver.email) {
-      await sendEmail({
+      sendEmail({
         to: receiver.email,
         subject: '🐱 你有一個新的突發任務！',
         html: `
@@ -59,10 +62,8 @@ const sendMission = async (req, res) => {
             </a>
           </div>
         `,
-      })
+      }).catch(err => console.error('Email 發送失敗:', err))
     }
-
-    res.status(201).json({ mission })
   } catch (err) {
     res.status(500).json({ message: '伺服器錯誤', error: err.message })
   }
