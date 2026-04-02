@@ -55,8 +55,8 @@ function InboxPage() {
   // 根據 tab 篩選
   const filtered = missions.filter(m =>
     tab === 'pending'
-      ? m.status === 'pending' || m.status === 'accepted'
-      : m.status === 'done' || m.status === 'declined'
+      ? m.status === 'pending' || m.status === 'accepted' || m.status === 'completed'
+      : m.status === 'confirmed'
   )
 
   return (
@@ -179,6 +179,18 @@ function InboxPage() {
                   }}>
                     來自 {mission.senderId?.username}
                   </span>
+
+                  <span style={{
+                    fontSize: '0.75rem',
+                    color: 'var(--text-muted)',
+                    fontWeight: 500,
+                  }}>
+                    {tab === 'pending'
+                      ? `📅 ${new Date(mission.createdAt).toLocaleDateString('zh-TW')}`
+                      : `✅ ${new Date(mission.confirmedAt).toLocaleDateString('zh-TW')}`
+                    }
+                  </span>
+
                 </div>
               </div>
             </div>
