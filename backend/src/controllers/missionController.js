@@ -42,13 +42,13 @@ const sendMission = async (req, res) => {
 
     const io = req.app.get('io')
     if (io) io.to(receiverId.toString()).emit('newMission', mission)
-    
+
     // 先回傳給前端（不用等 email）
     res.status(201).json({ mission })
 
     const receiver = await User.findById(receiverId)
-    console.log('📧 準備寄 email 給:', receiver?.email) 
-    
+    console.log('📧 準備寄 email 給:', receiver?.email)
+
     if (receiver.email) {
       sendEmail({
         to: receiver.email,
@@ -164,6 +164,14 @@ const confirmMission = async (req, res) => {
     mission.rating = rating
     await mission.save()
 
+    res.json({
+      mission,
+      pointsEarned: earnedPoints,
+      newStreak,
+      newTotal,
+      newTitlesUnlocked: newTitles.filter(t => !executor.titles.includes(t)),
+    })
+
     // 積分入帳給 B
     const executor = await User.findById(mission.receiverId)
     const now = new Date()
@@ -227,14 +235,6 @@ const confirmMission = async (req, res) => {
     `,
       })
     }
-
-    res.json({
-      mission,
-      pointsEarned: earnedPoints,
-      newStreak,
-      newTotal,
-      newTitlesUnlocked: newTitles.filter(t => !executor.titles.includes(t)),
-    })
   } catch (err) {
     res.status(500).json({ message: '伺服器錯誤', error: err.message })
   }
