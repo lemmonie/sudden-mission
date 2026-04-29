@@ -1,6 +1,6 @@
 const { Client, GatewayIntentBits } = require('discord.js')
 
-// 建立 Discord Bot client
+// Create Discord Bot client
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -8,21 +8,21 @@ const client = new Client({
   ]
 })
 
-// Bot 登入
+// Bot login
 client.login(process.env.DISCORD_BOT_TOKEN)
 
 client.once('ready', () => {
-  console.log(`✅ Discord Bot 已登入：${client.user.tag}`)
+  console.log(`✅ Discord Bot logged in: ${client.user.tag}`)
 })
 
-// 發送 DM 給用戶
+// Send DM to user
 const sendDM = async (discordUserId, message) => {
   try {
     const user = await client.users.fetch(discordUserId)
     await user.send(message)
-    console.log(`✅ Discord DM 已發送給 ${discordUserId}`)
+    console.log(`✅ Discord DM sent to ${discordUserId}`)
   } catch (err) {
-    console.error(`❌ Discord DM 發送失敗:`, err.message)
+    console.error(`❌ Discord DM failed:`, err.message)
   }
 }
 

@@ -17,9 +17,9 @@ const sendEmail = async ({ to, subject, html }) => {
       subject,
       html,
     })
-    console.log(`✅ Email 已發送至 ${to}`)
+    console.log(`✅ Email sent to ${to}`)
   } catch (err) {
-    console.error('❌ Email 發送失敗:', err)
+    console.error('❌ Email send failed:', err)
   }
 }
 

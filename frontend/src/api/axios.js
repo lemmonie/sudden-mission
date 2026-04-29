@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL: 'https://sudden-mission-backend.onrender.com/api',
 })
 
-// 每次發請求前，自動把 token 加進 Header
+// before sending request，auto add Header into  token.
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {

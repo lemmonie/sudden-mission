@@ -5,9 +5,9 @@ function BottomNav() {
   const current  = location.pathname
 
   const tabs = [
-    { path: '/',        icon: '🏠', label: '主頁'   },
-    { path: '/inbox',   icon: '📬', label: '收件匣' },
-    { path: '/profile', icon: '👤', label: '我的'   },
+    { path: '/',        icon: '🏠', label: 'Home'    },
+    { path: '/inbox',   icon: '📬', label: 'Inbox'   },
+    { path: '/profile', icon: '👤', label: 'Profile' },
   ]
 
   return (

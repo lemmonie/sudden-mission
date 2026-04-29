@@ -17,8 +17,8 @@ function HomePage() {
         try {
             const [pairRes, missionRes, pendingRes] = await Promise.all([
                 api.get('/pair/info'),
-                api.get('/mission?role=sent&status=completed'), // 待確認
-                api.get('/mission?role=received'),              // 收到的
+                api.get('/mission?role=sent&status=completed'), // awaiting confirmation
+                api.get('/mission?role=received'),              // received missions
             ])
             setPair(pairRes.data.pair)
             setPendingConfirm(missionRes.data.missions)
@@ -28,7 +28,7 @@ function HomePage() {
                 )
             )
         } catch (err) {
-            // 還沒配對的話 pair 就是 null
+            // pair is null if not paired yet
         } finally {
             setLoading(false)
         }
@@ -40,7 +40,7 @@ function HomePage() {
         ? (pair.user1._id === user.id ? pair.user2 : pair.user1)
         : null
 
-    const totalPoints = pair ? (pair.user1.totalPoints + pair.user2.totalPoints) : 0
+    const totalPoints   = pair ? (pair.user1.totalPoints + pair.user2.totalPoints) : 0
     const totalMissions = missions.length
 
     const typeEmoji = {
@@ -49,22 +49,22 @@ function HomePage() {
     }
 
     const statusText = {
-        pending: '⏳ 等待中',
-        accepted: '🔄 進行中',
-        completed: '🙋 待確認',
-        confirmed: '✅ 已完成',
-        declined: '❌ 已拒絕',
+        pending:   '⏳ Pending',
+        accepted:  '🔄 In Progress',
+        completed: '🙋 Awaiting Confirmation',
+        confirmed: '✅ Completed',
+        declined:  '❌ Declined',
     }
 
-    // A 確認完成
+    // Sender confirms completion
     const handleConfirm = async (id) => {
         const rating = ratingMap[id]
-        if (!rating) return alert('請先給星星評分！')
+        if (!rating) return alert('Please give a star rating first!')
         try {
             await api.patch(`/mission/${id}/confirm`, { rating })
             fetchData()
         } catch (err) {
-            alert(err.response?.data?.message || '操作失敗')
+            alert(err.response?.data?.message || 'Operation failed')
         }
     }
 
@@ -73,7 +73,7 @@ function HomePage() {
             await api.patch(`/mission/${id}/accept`)
             fetchData()
         } catch (err) {
-            alert(err.response?.data?.message || '操作失敗')
+            alert(err.response?.data?.message || 'Operation failed')
         }
     }
 
@@ -82,7 +82,7 @@ function HomePage() {
             await api.patch(`/mission/${id}/complete`)
             fetchData()
         } catch (err) {
-            alert(err.response?.data?.message || '操作失敗')
+            alert(err.response?.data?.message || 'Operation failed')
         }
     }
 
@@ -97,7 +97,7 @@ function HomePage() {
     return (
         <div className="app-container" style={{ paddingBottom: '100px' }}>
 
-            {/* 頂部 Header */}
+            {/* Header */}
             <div style={{
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 padding: '16px 0', borderBottom: '2px solid var(--border)', marginBottom: '24px',
@@ -111,7 +111,7 @@ function HomePage() {
                 </div>
             </div>
 
-            {/* 配對區域 */}
+            {/* Pair area */}
             {partner ? (
                 <div style={{
                     background: 'var(--surface)', borderRadius: 'var(--radius-lg)',
@@ -130,8 +130,8 @@ function HomePage() {
                         </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', paddingTop: '12px', borderTop: '2px solid var(--border)' }}>
-                        <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.9rem' }}>⭐ 合計 {totalPoints} 分</span>
-                        <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.9rem' }}>✅ {totalMissions} 個任務</span>
+                        <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.9rem' }}>⭐ {totalPoints} pts total</span>
+                        <span style={{ fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.9rem' }}>✅ {totalMissions} missions</span>
                     </div>
                 </div>
             ) : (
@@ -141,12 +141,12 @@ function HomePage() {
                     border: '2px dashed var(--border)', marginBottom: '16px',
                 }}>
                     <div style={{ fontSize: '48px', marginBottom: '8px' }}>🔗</div>
-                    <p style={{ fontWeight: 700, color: 'var(--text-muted)' }}>還沒有配對對象</p>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>去個人頁輸入配對碼開始吧！</p>
+                    <p style={{ fontWeight: 700, color: 'var(--text-muted)' }}>No partner yet</p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>Go to Profile and enter a pair code to get started!</p>
                 </div>
             )}
 
-            {/* 發送任務按鈕 */}
+            {/* Send mission button */}
             <button
                 className="btn btn-primary"
                 style={{ marginBottom: '24px', fontSize: '1.1rem', gap: '10px' }}
@@ -154,32 +154,32 @@ function HomePage() {
                 onClick={() => navigate('/send')}
             >
                 <span style={{ fontSize: '1.3rem', filter: 'brightness(10)' }}>⚡</span>
-                <span>傳送突發任務</span>
+                <span>Send a Sudden Mission</span>
             </button>
 
-            {/* 待確認任務 */}
+            {/* Awaiting confirmation */}
             {pendingConfirm.length > 0 && (
                 <div style={{ marginBottom: '24px' }}>
                     <h3 style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '12px', color: 'var(--text)' }}>
-                        🙋 待確認任務
+                        🙋 Awaiting Your Confirmation
                     </h3>
                     {pendingConfirm.map(mission => (
                         <div key={mission._id} style={{
                             background: 'var(--surface)', borderRadius: 'var(--radius-lg)',
                             padding: '16px', marginBottom: '12px',
                             border: '2px solid #f5a623', boxShadow: 'var(--shadow)',
-                        }}>
+elijken}}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                                 <span style={{ fontSize: '32px' }}>{typeEmoji[mission.type]}</span>
                                 <div>
                                     <div style={{ fontWeight: 800, fontSize: '1rem' }}>{mission.subtype}</div>
                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                                        {mission.receiverId?.username} 做完了！⭐ {mission.points} 分
+                                        {mission.receiverId?.username} completed it! ⭐ {mission.points} pts
                                     </div>
                                 </div>
                             </div>
 
-                            {/* 星星評分 */}
+                            {/* Star rating */}
                             <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
                                 {[1, 2, 3, 4, 5].map(star => (
                                     <button
@@ -204,21 +204,21 @@ function HomePage() {
                                 onClick={() => handleConfirm(mission._id)}
                                 style={{ padding: '12px', fontSize: '0.95rem' }}
                             >
-                                ✅ 確認完成
+                                ✅ Confirm Complete
                             </button>
                         </div>
                     ))}
                 </div>
             )}
 
-            {/* 最近任務 */}
+            {/* Pending missions */}
             <div>
                 <h3 style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '12px', color: 'var(--text)' }}>
-                    📭 待處理任務
+                    📭 Pending Missions
                 </h3>
                 {missions.length === 0 ? (
                     <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '24px', fontWeight: 600, fontSize: '0.9rem' }}>
-                        還沒有任務紀錄 — 傳送第一個任務吧！
+                        No missions yet — send your first one!
                     </div>
                 ) : (
                     missions.map(mission => (
@@ -233,7 +233,7 @@ function HomePage() {
                                     <div>
                                         <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{mission.subtype}</div>
                                         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                            {mission.points} 分 · 📅 {new Date(mission.createdAt).toLocaleDateString('zh-TW')}
+                                            {mission.points} pts · 📅 {new Date(mission.createdAt).toLocaleDateString('en-US')}
                                         </div>
                                     </div>
                                 </div>
@@ -246,12 +246,12 @@ function HomePage() {
                             </div>
                             {mission.status === 'pending' && (
                                 <button className="btn btn-primary" onClick={() => handleAcceptInbox(mission._id)} style={{ padding: '10px', fontSize: '0.9rem' }}>
-                                    接受任務
+                                    Accept Mission
                                 </button>
                             )}
                             {mission.status === 'accepted' && (
                                 <button className="btn btn-primary" onClick={() => handleCompleteInbox(mission._id)} style={{ padding: '10px', fontSize: '0.9rem' }}>
-                                    標記完成
+                                    Mark Complete
                                 </button>
                             )}
                         </div>

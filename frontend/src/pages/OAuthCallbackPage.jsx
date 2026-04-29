@@ -37,7 +37,7 @@ function OAuthCallbackPage() {
     }}>
       <div style={{ fontSize: '48px' }}>🐱</div>
       <p style={{ fontWeight: 700, color: 'var(--text-muted)' }}>
-        登入中...
+        Signing in...
       </p>
     </div>
   )

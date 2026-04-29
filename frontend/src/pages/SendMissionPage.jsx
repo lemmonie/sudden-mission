@@ -3,73 +3,66 @@ import { useNavigate } from 'react-router-dom'
 import api from '../api/axios'
 import BottomNav from '../components/BottomNav'
 
-// Mission 類型設定
 const MISSION_TYPES = [
   {
-    type:    'physical',
-    emoji:   '🤗',
-    label:   '肢體需求',
-    subtypes: ['擁抱', '牽手', '靠肩'],
+    type:     'physical',
+    emoji:    '🤗',
+    label:    'Physical',
+    subtypes: ['Hug', 'Hold Hands', 'Lean On Me'],
   },
   {
-    type:    'errand',
-    emoji:   '🛒',
-    label:   '跑腿需求',
-    subtypes: ['買東西', '買外賣', '取件'],
+    type:     'errand',
+    emoji:    '🛒',
+    label:    'Errand',
+    subtypes: ['Buy Something', 'Pick Up Food', 'Pick Up Package'],
   },
   {
-    type:    'company',
-    emoji:   '💬',
-    label:   '陪伴需求',
-    subtypes: ['聊天', '陪坐', '散步'],
+    type:     'company',
+    emoji:    '💬',
+    label:    'Company',
+    subtypes: ['Chat', 'Sit With Me', 'Go For A Walk'],
   },
   {
-    type:    'chore',
-    emoji:   '🍳',
-    label:   '家務需求',
-    subtypes: ['煮飯', '洗碗', '收拾'],
+    type:     'chore',
+    emoji:    '🍳',
+    label:    'Chore',
+    subtypes: ['Cook', 'Wash Dishes', 'Tidy Up'],
   },
   {
-    type:    'fun',
-    emoji:   '🎮',
-    label:   '娛樂需求',
-    subtypes: ['看劇', '玩遊戲', '出門'],
+    type:     'fun',
+    emoji:    '🎮',
+    label:    'Fun',
+    subtypes: ['Watch Something', 'Play Games', 'Go Out'],
   },
   {
-    type:    'emotional',
-    emoji:   '💌',
-    label:   '情感需求',
-    subtypes: ['鼓勵', '傾聽', '安慰'],
+    type:     'emotional',
+    emoji:    '💌',
+    label:    'Emotional',
+    subtypes: ['Encourage Me', 'Listen To Me', 'Comfort Me'],
   },
 ]
 
 function SendMissionPage() {
   const navigate = useNavigate()
 
-  const [step, setStep]           = useState(1) // 1=選類型 2=選子類型 3=填詳情
-  const [selectedType, setSelectedType] = useState(null)
-  const [subtype, setSubtype]     = useState('')
-  const [note, setNote]           = useState('')
-  const [points, setPoints]       = useState(5)
-  const [loading, setLoading]     = useState(false)
-  const [error, setError]         = useState('')
+  const [step, setStep]                   = useState(1)
+  const [selectedType, setSelectedType]   = useState(null)
+  const [subtype, setSubtype]             = useState('')
+  const [note, setNote]                   = useState('')
+  const [points, setPoints]               = useState(5)
+  const [loading, setLoading]             = useState(false)
+  const [error, setError]                 = useState('')
 
   const selectedConfig = MISSION_TYPES.find(t => t.type === selectedType)
 
-  // 發送任務
   const handleSend = async () => {
     setLoading(true)
     setError('')
     try {
-      await api.post('/mission', {
-        type:    selectedType,
-        subtype,
-        note,
-        points,
-      })
+      await api.post('/mission', { type: selectedType, subtype, note, points })
       navigate('/', { state: { success: true } })
     } catch (err) {
-      setError(err.response?.data?.message || '發送失敗，請再試一次')
+      setError(err.response?.data?.message || 'Failed to send, please try again')
     } finally {
       setLoading(false)
     }
@@ -78,40 +71,25 @@ function SendMissionPage() {
   return (
     <div className="app-container" style={{ paddingBottom: '100px' }}>
 
-      {/* 頂部 Header */}
+      {/* Header */}
       <div style={{
-        display:        'flex',
-        alignItems:     'center',
-        padding:        '16px 0',
-        borderBottom:   '2px solid var(--border)',
-        marginBottom:   '24px',
-        gap:            '12px',
+        display: 'flex', alignItems: 'center',
+        padding: '16px 0', borderBottom: '2px solid var(--border)',
+        marginBottom: '24px', gap: '12px',
       }}>
         <button
           onClick={() => step === 1 ? navigate('/') : setStep(step - 1)}
-          style={{
-            background:  'none',
-            border:      'none',
-            fontSize:    '1.5rem',
-            cursor:      'pointer',
-            padding:     '0',
-            color:       'var(--text)',
-          }}
+          style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', padding: '0', color: 'var(--text)' }}
         >
           ←
         </button>
         <h2 style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text)' }}>
-          {step === 1 ? '選擇任務類型' : step === 2 ? '選擇細項' : '任務詳情'}
+          {step === 1 ? 'Choose Mission Type' : step === 2 ? 'Choose Option' : 'Mission Details'}
         </h2>
       </div>
 
-      {/* 步驟指示器 */}
-      <div style={{
-        display:        'flex',
-        justifyContent: 'center',
-        gap:            '8px',
-        marginBottom:   '24px',
-      }}>
+      {/* Step indicator */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '24px' }}>
         {[1, 2, 3].map(s => (
           <div key={s} style={{
             width:        s === step ? '24px' : '8px',
@@ -123,13 +101,9 @@ function SendMissionPage() {
         ))}
       </div>
 
-      {/* Step 1：選類型 */}
+      {/* Step 1: Choose type */}
       {step === 1 && (
-        <div style={{
-          display:             'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap:                 '12px',
-        }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           {MISSION_TYPES.map(t => (
             <button
               key={t.type}
@@ -157,7 +131,7 @@ function SendMissionPage() {
         </div>
       )}
 
-      {/* Step 2：選子類型 */}
+      {/* Step 2: Choose subtype */}
       {step === 2 && selectedConfig && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ textAlign: 'center', marginBottom: '8px' }}>
@@ -171,17 +145,17 @@ function SendMissionPage() {
               key={s}
               onClick={() => { setSubtype(s); setStep(3) }}
               style={{
-                background:    'var(--surface)',
-                border:        '2px solid var(--border)',
-                borderRadius:  'var(--radius-md)',
-                padding:       '16px',
-                cursor:        'pointer',
-                fontFamily:    'var(--font)',
-                fontWeight:    700,
-                fontSize:      '1rem',
-                color:         'var(--text)',
-                textAlign:     'left',
-                boxShadow:     'var(--shadow)',
+                background:   'var(--surface)',
+                border:       '2px solid var(--border)',
+                borderRadius: 'var(--radius-md)',
+                padding:      '16px',
+                cursor:       'pointer',
+                fontFamily:   'var(--font)',
+                fontWeight:   700,
+                fontSize:     '1rem',
+                color:        'var(--text)',
+                textAlign:    'left',
+                boxShadow:    'var(--shadow)',
               }}
             >
               {s}
@@ -190,36 +164,34 @@ function SendMissionPage() {
         </div>
       )}
 
-      {/* Step 3：填詳情 */}
+      {/* Step 3: Details */}
       {step === 3 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-          {/* 任務摘要 */}
+          {/* Mission summary */}
           <div style={{
-            background:    'var(--primary-light)',
-            borderRadius:  'var(--radius-md)',
-            padding:       '14px 16px',
-            display:       'flex',
-            alignItems:    'center',
-            gap:           '12px',
+            background:   'var(--primary-light)',
+            borderRadius: 'var(--radius-md)',
+            padding:      '14px 16px',
+            display:      'flex',
+            alignItems:   'center',
+            gap:          '12px',
           }}>
             <span style={{ fontSize: '28px' }}>{selectedConfig?.emoji}</span>
             <div>
               <div style={{ fontWeight: 800, color: 'var(--primary)' }}>{subtype}</div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                {selectedConfig?.label}
-              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{selectedConfig?.label}</div>
             </div>
           </div>
 
-          {/* 備註 */}
+          {/* Note */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <label style={{ fontWeight: 700, fontSize: '0.9rem' }}>
-              備註 <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(選填)</span>
+              Note <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(optional)</span>
             </label>
             <textarea
               className="input"
-              placeholder="說說你現在的感受..."
+              placeholder="How are you feeling right now..."
               value={note}
               onChange={e => setNote(e.target.value)}
               rows={3}
@@ -231,17 +203,12 @@ function SendMissionPage() {
             </div>
           </div>
 
-          {/* 分數設定 */}
+          {/* Points slider */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <label style={{ fontWeight: 700, fontSize: '0.9rem' }}>
-              這個任務對你有多重要？
+              How important is this mission to you?
             </label>
-            <div style={{
-              display:        'flex',
-              justifyContent: 'space-between',
-              alignItems:     'center',
-              gap:            '12px',
-            }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>1</span>
               <input
                 type="range"
@@ -254,26 +221,22 @@ function SendMissionPage() {
               <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>10</span>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <span style={{
-                fontWeight:    800,
-                fontSize:      '1.5rem',
-                color:         'var(--primary)',
-              }}>
-                {points} 分
+              <span style={{ fontWeight: 800, fontSize: '1.5rem', color: 'var(--primary)' }}>
+                {points} pts
               </span>
             </div>
           </div>
 
           {error && <div className="error-box">{error}</div>}
 
-          {/* 發送按鈕 */}
+          {/* Send button */}
           <button
             className="btn btn-primary"
             onClick={handleSend}
             disabled={loading}
             style={{ fontSize: '1.1rem' }}
           >
-            {loading ? '發送中...' : `⚡ 發送任務 (${points} 分)`}
+            {loading ? 'Sending...' : `⚡ Send Mission (${points} pts)`}
           </button>
 
         </div>

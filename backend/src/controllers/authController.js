@@ -2,11 +2,11 @@ const jwt    = require('jsonwebtoken')
 const crypto = require('crypto')
 const User   = require('../models/User')
 
-// 產生 JWT Token
+// Generate JWT Token
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
-// 整理回傳給前端的用戶資料
+// Format user data for frontend response
 const formatUser = (user) => ({
   id:            user._id,
   username:      user.username,
@@ -20,26 +20,26 @@ const formatUser = (user) => ({
   activeTitle:   user.activeTitle,
 })
 
-// ── 註冊
+// ── Register
 const register = async (req, res) => {
   try {
     const { username, email, password } = req.body
 
-    // 檢查必填欄位
+    // Check required fields
     if (!username || !email || !password) {
-      return res.status(400).json({ message: '請填寫所有欄位' })
+      return res.status(400).json({ message: 'Please fill in all fields' })
     }
 
-    // 檢查是否已被使用
+    // Check if already taken
     const exists = await User.findOne({ $or: [{ email }, { username }] })
     if (exists) {
-      return res.status(400).json({ message: '此 Email 或用戶名稱已被使用' })
+      return res.status(400).json({ message: 'This email or username is already taken' })
     }
 
-    // 產生 6 位大寫配對碼，例如：A3F9BC
+    // Generate 6-character uppercase pair code, e.g. A3F9BC
     const pairCode = crypto.randomBytes(3).toString('hex').toUpperCase()
 
-    // 建立用戶（密碼會在 User model 自動加密）
+    // Create user (password is hashed automatically in User model)
     const user = await User.create({ username, email, password, pairCode })
 
     const token = signToken(user._id)
@@ -50,39 +50,39 @@ const register = async (req, res) => {
       const message = Object.values(err.errors).map(e => e.message).join(', ')
       return res.status(400).json({ message })
     }
-    res.status(500).json({ message: '伺服器錯誤', error: err.message })
+    res.status(500).json({ message: 'Server error', error: err.message })
   }
 }
 
-// ── 登入
+// ── Login
 const login = async (req, res) => {
   try {
     const { email, password } = req.body
 
     if (!email || !password) {
-      return res.status(400).json({ message: '請填寫 Email 和密碼' })
+      return res.status(400).json({ message: 'Please enter your email and password' })
     }
 
-    // 查詢用戶（要把密碼欄位加回來才能比對）
+    // Find user (need to include password field for comparison)
     const user = await User.findOne({ email }).select('+password')
     if (!user) {
-      return res.status(401).json({ message: 'Email 或密碼錯誤' })
+      return res.status(401).json({ message: 'Incorrect email or password' })
     }
 
-    // 比對密碼
+    // Compare password
     const isMatch = await user.comparePassword(password)
     if (!isMatch) {
-      return res.status(401).json({ message: 'Email 或密碼錯誤' })
+      return res.status(401).json({ message: 'Incorrect email or password' })
     }
 
     const token = signToken(user._id)
     res.json({ token, user: formatUser(user) })
   } catch (err) {
-    res.status(500).json({ message: '伺服器錯誤', error: err.message })
+    res.status(500).json({ message: 'Server error', error: err.message })
   }
 }
 
-// ── 取得目前登入用戶
+// ── Get current logged-in user
 const getMe = async (req, res) => {
   res.json({ user: formatUser(req.user) })
 }

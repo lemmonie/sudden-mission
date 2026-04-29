@@ -10,7 +10,7 @@ const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' })
 
 // ── GET /api/auth/discord
-// 跳轉到 Discord 授權頁面
+// Redirect to Discord authorization page
 router.get('/discord', (req, res) => {
   const params = new URLSearchParams({
     client_id:     process.env.DISCORD_CLIENT_ID,
@@ -22,13 +22,13 @@ router.get('/discord', (req, res) => {
 })
 
 // ── GET /api/auth/discord/callback
-// Discord 授權完成後的回調
+// Callback after Discord authorization
 router.get('/discord/callback', async (req, res) => {
   try {
     const { code } = req.query
     if (!code) return res.redirect(`${process.env.FRONTEND_URL}/login?error=no_code`)
 
-    // 用 code 換 access token
+    // Exchange code for access token
     const tokenRes = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
@@ -43,53 +43,53 @@ router.get('/discord/callback', async (req, res) => {
 
     const accessToken = tokenRes.data.access_token
 
-    // 用 access token 拿用戶資料
+    // Use access token to fetch user data
     const userRes = await axios.get('https://discord.com/api/users/@me', {
       headers: { Authorization: `Bearer ${accessToken}` }
     })
 
     const discordUser = userRes.data
-    // discordUser.id = Discord User ID
-    // discordUser.username = Discord 用戶名
-    // discordUser.email = Discord Email
+    // discordUser.id       = Discord User ID
+    // discordUser.username = Discord username
+    // discordUser.email    = Discord email
 
-    // 查找或建立用戶
+    // Find or create user
     let user = await User.findOne({ discordId: discordUser.id })
 
     if (!user) {
-      // 新用戶：建立帳號
+      // New user: create account
       const pairCode = crypto.randomBytes(3).toString('hex').toUpperCase()
       user = await User.create({
-        username:    discordUser.username,
-        email:       discordUser.email || `${discordUser.id}@discord.com`,
-        password:    crypto.randomBytes(16).toString('hex'), // 隨機密碼
+        username:  discordUser.username,
+        email:     discordUser.email || `${discordUser.id}@discord.com`,
+        password:  crypto.randomBytes(16).toString('hex'), // random password
         pairCode,
-        discordId:   discordUser.id,
+        discordId: discordUser.id,
       })
 
-      // 發歡迎 DM
+      // Send welcome DM
       try {
         await sendDM(discordUser.id,
-          `🐱 歡迎使用 Sudden Mission！\n\n你已經成功登入，之後收到任務時我會在這裡通知你！\n\n你的配對碼是：**${pairCode}**`
+          `🐱 Welcome to Sudden Mission!\n\nYou're all logged in. I'll notify you here whenever you receive a mission!\n\nYour pair code is: **${pairCode}**`
         )
       } catch (e) {
-        console.error('歡迎 DM 發送失敗:', e.message)
+        console.error('Welcome DM failed:', e.message)
       }
     } else {
-      // 舊用戶：更新 Discord ID（如果還沒有）
+      // Existing user: update Discord ID if not set
       if (!user.discordId) {
         await User.findByIdAndUpdate(user._id, { discordId: discordUser.id })
       }
     }
 
-    // 產生 JWT
+    // Generate JWT
     const token = signToken(user._id)
 
-    // 跳轉回前端，帶上 token
+    // Redirect back to frontend with token
     res.redirect(`${process.env.FRONTEND_URL}/discord-callback?token=${token}`)
 
   } catch (err) {
-    console.error('Discord OAuth 錯誤:', err.message)
+    console.error('Discord OAuth error:', err.message)
     res.redirect(`${process.env.FRONTEND_URL}/login?error=discord_failed`)
   }
 })

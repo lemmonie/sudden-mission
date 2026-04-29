@@ -8,7 +8,7 @@ const missionSchema = new mongoose.Schema(
 
     type:    { type: String, enum: ['physical','errand','company','chore','fun','emotional'], required: true },
     subtype: { type: String, required: true },
-    note:    { type: String, default: '', maxlength: [300, '最多 300 個字'] },
+    note:    { type: String, default: '', maxlength: [300, 'Maximum 300 characters'] },
     points:  { type: Number, required: true, min: 1, max: 10 },
 
     status:      { type: String, enum: ['pending','accepted','completed','confirmed','declined'], default: 'pending' },

@@ -1,5 +1,5 @@
 require('dotenv').config()
-require('./discord') // 啟動 Discord Bot
+require('./discord') // Start Discord Bot
 
 const express    = require('express')
 const http       = require('http')
@@ -7,11 +7,11 @@ const { Server } = require('socket.io')
 const mongoose   = require('mongoose')
 const cors       = require('cors')
 
-const authRoutes    = require('./routes/auth')
-const pairRoutes    = require('./routes/pair')
-const missionRoutes = require('./routes/mission')
+const authRoutes        = require('./routes/auth')
+const pairRoutes        = require('./routes/pair')
+const missionRoutes     = require('./routes/mission')
 const discordAuthRoutes = require('./routes/discordAuth')
-const googleAuthRoutes = require('./routes/googleAuth')
+const googleAuthRoutes  = require('./routes/googleAuth')
 
 const app    = express()
 const server = http.createServer(app)
@@ -23,33 +23,32 @@ const io = new Server(server, {
 app.set('io', io)
 
 io.on('connection', (socket) => {
-  console.log('🔌 有用戶連線:', socket.id)
+  console.log('🔌 User connected:', socket.id)
 
   socket.on('join', (userId) => {
     socket.join(userId)
-    console.log(`✅ userId ${userId} 加入房間`)
+    console.log(`✅ userId ${userId} joined room`)
   })
 
   socket.on('disconnect', () => {
-    console.log('❌ 用戶斷線:', socket.id)
+    console.log('❌ User disconnected:', socket.id)
   })
 })
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin:      process.env.FRONTEND_URL,
   credentials: true,
 }))
 app.use(express.json())
 
-app.use('/api/auth', googleAuthRoutes)
+app.use('/api/auth',         googleAuthRoutes)
 app.use('/api/discord-auth', discordAuthRoutes)
-app.use('/api/auth',    authRoutes)
-app.use('/api/pair',    pairRoutes)
-app.use('/api/mission', missionRoutes)
-
+app.use('/api/auth',         authRoutes)
+app.use('/api/pair',         pairRoutes)
+app.use('/api/mission',      missionRoutes)
 
 app.get('/', (req, res) => {
-  res.json({ message: '🚀 Sudden Mission API 運作中！' })
+  res.json({ message: '🚀 Sudden Mission API is running!' })
 })
 
 const PORT = process.env.PORT || 5000
@@ -57,12 +56,12 @@ const PORT = process.env.PORT || 5000
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('✅ MongoDB 連線成功')
+    console.log('✅ MongoDB connected')
     server.listen(PORT, () => {
-      console.log(`🚀 伺服器運行在 http://localhost:${PORT}`)
+      console.log(`🚀 Server running at http://localhost:${PORT}`)
     })
   })
   .catch((err) => {
-    console.error('❌ MongoDB 連線失敗:', err.message)
+    console.error('❌ MongoDB connection failed:', err.message)
     process.exit(1)
   })

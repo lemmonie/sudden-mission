@@ -7,35 +7,35 @@
 }
 
 :root {
-  /* 主色 — 橘貓色，比之前深一點點，對比更強 */
+  /* primary color */
   --primary:         #E8845A;
   --primary-dark:    #C96A3E;
   --primary-light:   #FFEEE6;
   --primary-border:  #C96A3E;
 
-  /* 輔助色 */
+  /* secondary color */
   --success:         #58CC02;
   --success-dark:    #46A302;
   --success-light:   #EDFFD1;
 
-  /* 中性色 */
+  /* mutual color */
   --bg:              #F5EDE6;
   --surface:         #FFFFFF;
   --border:          #E8D5C8;
   --text:            #3D2B1F;
   --text-muted:      #A0826D;
 
-  /* 字型 */
+  /* font */
   --font: 'Nunito', sans-serif;
 
-  /* 圓角 — 比之前更大更圓 */
+  /* radius */
   --radius-sm:   10px;
   --radius-md:   16px;
   --radius-lg:   24px;
   --radius-xl:   32px;
   --radius-full: 9999px;
 
-  /* 陰影 — Duolingo 招牌立體感 */
+  /* shadow */
   --shadow-card: 0 4px 0 #D4C0B5;
   --shadow-btn:  0 4px 0 var(--primary-dark);
   --shadow-btn-success: 0 4px 0 var(--success-dark);
@@ -57,7 +57,7 @@ body {
   min-height: 100dvh;
 }
 
-/* ── App 容器 ── */
+/* ── App container ── */
 .app-container {
   width:      100%;
   max-width:  480px;
@@ -67,7 +67,7 @@ body {
   background: var(--bg);
 }
 
-/* ── 按鈕 — Duolingo 立體風格 ── */
+/* ── button ── */
 .btn {
   display:         flex;
   align-items:     center;
@@ -87,7 +87,7 @@ body {
   user-select:     none;
 }
 
-/* 按下去沉下去的感覺 */
+/* active effect: will collapse once pressed */
 .btn:active {
   transform:  translateY(3px);
   box-shadow: none !important;
@@ -119,7 +119,7 @@ body {
   border:      2px solid var(--border);
 }
 
-/* ── 輸入框 ── */
+/* ── Input box ── */
 .input {
   width:         100%;
   padding:       16px 18px;
@@ -145,7 +145,7 @@ body {
   font-weight: 400;
 }
 
-/* ── 卡片 ── */
+/* ── Card ── */
 .card {
   background:    var(--surface);
   border-radius: var(--radius-lg);
@@ -155,7 +155,7 @@ body {
   margin-bottom: 14px;
 }
 
-/* ── 錯誤訊息 ── */
+/* ── Error box ── */
 .error-box {
   background:    #FFE5E5;
   color:         #CC0000;
@@ -167,7 +167,7 @@ body {
   border:        2px solid #FFCCCC;
 }
 
-/* ── 底部導航 ── */
+/* ── Bottom navigation ── */
 .bottom-nav {
   position:        fixed;
   bottom:          0;

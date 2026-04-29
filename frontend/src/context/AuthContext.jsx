@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // App 啟動時，用 token 還原登入狀態
+  // Restore login state on app start
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
@@ -20,21 +20,21 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
-  // 登入
+  // Login
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password })
     localStorage.setItem('token', res.data.token)
     setUser(res.data.user)
   }
 
-  // 註冊
+  // Register
   const register = async (username, email, password) => {
     const res = await api.post('/auth/register', { username, email, password })
     localStorage.setItem('token', res.data.token)
     setUser(res.data.user)
   }
 
-  // 登出
+  // Logout
   const logout = () => {
     localStorage.removeItem('token')
     setUser(null)
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
   )
 }
 
-// 自訂 hook，讓其他元件可以直接用 useAuth()
+// Custom hook for accessing auth context
 export function useAuth() {
   return useContext(AuthContext)
 }

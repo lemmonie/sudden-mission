@@ -16,9 +16,9 @@ function LoginPage() {
 
         try {
             await login(email, password)
-            // 登入成功後 AuthContext 會自動跳轉到主頁
+            // AuthContext will redirect to home on success
         } catch (err) {
-            setError(err.response?.data?.message || '登入失敗，請再試一次')
+            setError(err.response?.data?.message || 'Login failed, please try again')
         } finally {
             setLoading(false)
         }
@@ -27,33 +27,22 @@ function LoginPage() {
     return (
         <div className="app-container">
 
-            {/* Logo 區 */}
+            {/* Logo */}
             <div style={{
-                textAlign: 'center',
-                paddingTop: '60px',
-                paddingBottom: '40px'
+                textAlign:     'center',
+                paddingTop:    '60px',
+                paddingBottom: '40px',
             }}>
-                <div style={{
-                    fontSize: '64px',
-                    marginBottom: '12px'
-                }}>🐱</div>
-                <h1 style={{
-                    fontSize: '2rem',
-                    fontWeight: 900,
-                    color: 'var(--primary)'
-                }}>
+                <div style={{ fontSize: '64px', marginBottom: '12px' }}>🐱</div>
+                <h1 style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--primary)' }}>
                     Sudden Mission
                 </h1>
-                <p style={{
-                    color: 'var(--text-muted)',
-                    marginTop: '8px',
-                    fontWeight: 600
-                }}>
-                    傳送你的小需求給最重要的人
+                <p style={{ color: 'var(--text-muted)', marginTop: '8px', fontWeight: 600 }}>
+                    Send little missions to the people you love
                 </p>
             </div>
 
-            {/* 登入表單 */}
+            {/* Login form */}
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
                 {error && <div className="error-box">{error}</div>}
@@ -71,11 +60,11 @@ function LoginPage() {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ fontWeight: 700, fontSize: '0.9rem' }}>密碼</label>
+                    <label style={{ fontWeight: 700, fontSize: '0.9rem' }}>Password</label>
                     <input
                         className="input"
                         type="password"
-                        placeholder="輸入密碼"
+                        placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -88,66 +77,62 @@ function LoginPage() {
                         type="submit"
                         disabled={loading}
                     >
-                        {loading ? '登入中...' : '登入'}
+                        {loading ? 'Signing in...' : 'Sign In'}
                     </button>
 
-                    {/* 分隔線 */}
+                    {/* Divider */}
                     <div style={{
-                        display: 'flex',
+                        display:    'flex',
                         alignItems: 'center',
-                        gap: '12px',
-                        color: 'var(--text-muted)',
-                        fontSize: '0.85rem',
+                        gap:        '12px',
+                        color:      'var(--text-muted)',
+                        fontSize:   '0.85rem',
                         fontWeight: 600,
                     }}>
                         <div style={{ flex: 1, height: '2px', background: 'var(--border)' }} />
-                        或者
+                        or
                         <div style={{ flex: 1, height: '2px', background: 'var(--border)' }} />
                     </div>
 
-                    {/* Discord 登入按鈕 */}
-
+                    {/* Google login */}
                     <a href="https://sudden-mission-backend.onrender.com/api/auth/google"
                         className="btn"
                         style={{
-                            background: '#fff',
-                            color: '#444',
-                            boxShadow: '0 4px 0 #ddd',
-                            border: '2px solid #ddd',
+                            background:     '#fff',
+                            color:          '#444',
+                            boxShadow:      '0 4px 0 #ddd',
+                            border:         '2px solid #ddd',
                             textDecoration: 'none',
-                            display: 'flex',
-                            alignItems: 'center',
+                            display:        'flex',
+                            alignItems:     'center',
                             justifyContent: 'center',
-                            gap: '8px',
+                            gap:            '8px',
                         }}
                     >
                         <span style={{ fontSize: '1.2rem' }}>🔵</span>
-                        用 Google 登入
+                        Continue with Google
                     </a>
                 </div>
 
+            </form>
 
-
-            </form >
-
-            {/* 切換到註冊 */}
-            < p style={{
-                textAlign: 'center',
-                marginTop: '32px',
-                color: 'var(--text-muted)',
-                fontWeight: 600
-            }
-            }>
-                還沒有帳號？{' '}
+            {/* Switch to register */}
+            <p style={{
+                textAlign:  'center',
+                marginTop:  '32px',
+                color:      'var(--text-muted)',
+                fontWeight: 600,
+            }}>
+                Don't have an account?{' '}
                 <Link
                     to="/register"
                     style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 800 }}
                 >
-                    立即註冊
+                    Sign Up
                 </Link>
-            </p >
+            </p>
 
-        </div >
+        </div>
     )
 }
 
