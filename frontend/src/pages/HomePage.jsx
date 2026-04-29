@@ -168,7 +168,7 @@ function HomePage() {
                             background: 'var(--surface)', borderRadius: 'var(--radius-lg)',
                             padding: '16px', marginBottom: '12px',
                             border: '2px solid #f5a623', boxShadow: 'var(--shadow)',
-elijken}}>
+                            }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                                 <span style={{ fontSize: '32px' }}>{typeEmoji[mission.type]}</span>
                                 <div>
