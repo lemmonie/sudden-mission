@@ -193,4 +193,4 @@ The app uses a monorepo structure with separate deploy targets:
 
 ## Author
 
-**Joycelyn** — [GitHub](https://github.com/lemmonie)
+**Lemmonie** — [GitHub](https://github.com/lemmonie)
